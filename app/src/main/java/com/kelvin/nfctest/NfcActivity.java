@@ -27,16 +27,24 @@ public class NfcActivity extends AppCompatActivity {
         textView_3 = findViewById(R.id.textView3);
     }
 
+    /**
+     * launchMode=singleTop,nfc重新触碰后会触发onNewIntent,onNewIntent调用完后会调用onResume
+     *
+     * @param intent
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
+        Log.d("kaikai", "onNewIntent -- NfcActivity");
         this.setIntent(intent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        Log.d("kaikai", "onResume -- NfcActivity");
+
         Intent intent = getIntent();
 
         Log.d("kaikai", "action:" + intent.getAction());
@@ -47,20 +55,28 @@ public class NfcActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * 处理Ndef消息
+     *
+     * @param intent
+     */
     private void processIntent(Intent intent) {
         Log.d("kaikai", "processIntent");
 
+        // 从intent中获取Parcelable[]
         Parcelable[] parcelables = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
 
+        // 强制转换为NdefMessage
         NdefMessage message = (NdefMessage) parcelables[0];
 
         try {
-            String text = new String(message.getRecords()[0].getPayload(), "utf-8");
-            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-            Log.d("kaikai", "text:" + text);
+            // 获取message中各记录的内容
+            String text2 = new String(message.getRecords()[0].getPayload(), "utf-8");
+            Toast.makeText(this, text2, Toast.LENGTH_SHORT).show();
+            Log.d("kaikai", "text2:" + text2);
+            textView_2.setText(text2);
 
-            textView_2.setText(text);
-
+            // 若有更多记录，则继续处理...
             if (message.getRecords().length > 1) {
                 String text3 = new String(message.getRecords()[1].getPayload(), "utf-8");
                 Log.d("kaikai", "text3:" + text3);

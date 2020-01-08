@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.kelvin.nfctest">
 
     <uses-permission android:name="android.permission.NFC" />
@@ -14,66 +15,62 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".NfcActivity">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+
+        <!-- 接收消息的Activity，launchMode最好用singleTop，为了在接收nfc消息后能回调onNewIntent -->
+        <activity
+            android:name=".NfcActivity"
+            android:launchMode="singleTop">
             <!-- tech -->
             <!--<intent-filter>-->
-                <!--<action android:name="android.nfc.action.TECH_DISCOVERED" />-->
+            <!--<action android:name="android.nfc.action.TECH_DISCOVERED" />-->
             <!--</intent-filter>-->
             <!--<meta-data-->
-                <!--android:name="android.nfc.action.TECH_DISCOVERED"-->
-                <!--android:resource="@xml/nfc_tech_filter" />-->
+            <!--android:name="android.nfc.action.TECH_DISCOVERED"-->
+            <!--android:resource="@xml/nfc_tech_filter" />-->
 
             <!-- NDEF URI -->
             <!--<intent-filter>-->
-                <!--<action android:name="android.nfc.action.NDEF_DISCOVERED" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<data-->
-                    <!--android:host="chongfok.xyz"-->
-                    <!--android:pathPrefix="/index.html"-->
-                    <!--android:scheme="http" />-->
-            <!--</intent-filter>-->
-
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <!--<data android:mimeType="application/vnd.com.example.android.beam" />-->
-                <data android:mimeType="application/chongfok.xyz" />
-            </intent-filter>
-
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <!-- NDEF mime类型 -->
-            <!--<intent-filter>-->
             <!--<action android:name="android.nfc.action.NDEF_DISCOVERED" />-->
-
             <!--<category android:name="android.intent.category.DEFAULT" />-->
-
-            <!--<data android:mimeType="text/plain" />-->
+            <!--<data-->
+            <!--android:host="chongfok.xyz"-->
+            <!--android:pathPrefix="/index.html"-->
+            <!--android:scheme="http" />-->
             <!--</intent-filter>-->
-
-
-            <!-- tech -->
-            <!--<intent-filter>-->
-            <!--<action android:name="android.nfc.action.TECH_DISCOVERED"/>-->
-            <!--</intent-filter>-->
-            <!--<meta-data android:name="android.nfc.action.TECH_DISCOVERED"-->
-            <!--android:resource="@xml/nfc_tech_filter" />-->
-
 
             <!-- tag -->
             <!-- <intent-filter> -->
             <!-- <action android:name="android.nfc.action.TAG_DISCOVERED"/> -->
             <!-- </intent-filter> -->
 
+            <!-- mime type 能过滤 -->
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="application/chongfok.xyz" />
+            </intent-filter>
+
+            <!-- external type -->
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <!-- android:pathPrefix="/com.example:externaltype" 用小写，官网例子用externalType，过滤不了  -->
+                <data android:scheme="vnd.android.nfc"
+                    android:host="ext"
+                    android:pathPrefix="/com.example:externaltype"/>
+            </intent-filter>
+
+        </activity>
+
+        <!-- 发送消息的Activity -->
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
