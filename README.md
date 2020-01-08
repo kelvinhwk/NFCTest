@@ -106,7 +106,7 @@ NdefRecord record = NdefRecord.createExternal(domain, type, payload);
 1. uri类型的消息用intent filter尝试拦截，但拦截不到，系统直接用浏览器跳去该uri
 2. external类型的，拦截器intent filter中的pathprefix可能要小写（官网例子中externalType的T是大写）
 3. text类型的记录，payload会包含languagecode，所以还是考虑后续的记录用mime类型的记录。
-
+4. 接收消息的Activity最好设置launchMode为singleTop，以便重新触碰后出发onNewIntent，在onNewIntent中setIntent，在onResume方法中解释intent中的NdefMessage消息
 
 
 
